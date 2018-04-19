@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="org.schabi.newpipe">
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+
+    <application
+        android:name=".App"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:logo="@mipmap/ic_launcher"
+        android:theme="@style/OpeningTheme"
+        tools:ignore="AllowBackup">
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+        <receiver android:name="android.support.v4.media.session.MediaButtonReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name=".player.old.PlayVideoActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/OldVideoPlayerTheme"
+            tools:ignore="UnusedAttribute"/>
+
+        <service
+            android:name=".player.BackgroundPlayer"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+            </intent-filter>
+        </service>
+
+        <activity
+            android:name=".player.BackgroundPlayerActivity"
+            android:launchMode="singleTask"
+            android:label="@string/title_activity_background_player"/>
+
+        <activity
+            android:name=".player.PopupVideoPlayerActivity"
+            android:launchMode="singleTask"
+            android:label="@string/title_activity_popup_player"/>
+
+        <service
+            android:name=".player.PopupVideoPlayer"
+            android:exported="false"/>
+
+        <activity
+            android:name=".player.MainVideoPlayer"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+            android:label="@string/app_name"
+            android:launchMode="singleTask"/>
+
+        <activity
+            android:name=".settings.SettingsActivity"
+            android:label="@string/settings"/>
+
+        <activity
+            android:name=".about.AboutActivity"
+            android:label="@string/title_activity_about"/>
+
+        <activity
+            android:name=".history.HistoryActivity"
+            android:label="@string/title_activity_history"/>
+
+        <service android:name=".subscription.services.SubscriptionsImportService"/>
+        <service android:name=".subscription.services.SubscriptionsExportService"/>
+
+        <activity
+            android:name=".PanicResponderActivity"
+            android:launchMode="singleInstance"
+            android:noHistory="true"
+            android:theme="@android:style/Theme.NoDisplay">
+            <intent-filter>
+                <action android:name="info.guardianproject.panic.action.TRIGGER"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ExitActivity"
+            android:label="@string/general_error"
+            android:theme="@android:style/Theme.NoDisplay"/>
+        <activity android:name=".report.ErrorActivity"/>
+
+        <!-- giga get related -->
+        <activity
+            android:name=".download.DownloadActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleTask"/>
+
+        <service android:name="us.shandian.giga.service.DownloadManagerService"/>
+
+        <activity
+            android:name=".util.FilePickerActivityHelper"
+            android:label="@string/app_name"
+            android:theme="@style/FilePickerThemeDark">
+            <intent-filter>
+                <action android:name="android.intent.action.GET_CONTENT" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ReCaptchaActivity"
+            android:label="@string/reCaptchaActivity"/>
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/nnf_provider_paths"/>
+        </provider>
+
+        <activity
+            android:name=".RouterActivity"
+            android:excludeFromRecents="true"
+            android:label="@string/preferred_open_action_share_menu_title"
+            android:taskAffinity=""
+            android:theme="@style/RouterActivityThemeDark">
+
+            <!-- Youtube filter -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.media.action.MEDIA_PLAY_FROM_SEARCH"/>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data android:scheme="http"/>
+                <data android:scheme="https"/>
+                <data android:host="youtube.com"/>
+                <data android:host="m.youtube.com"/>
+                <data android:host="www.youtube.com"/>
+                <!-- video prefix -->
+                <data android:pathPrefix="/v/"/>
+                <data android:pathPrefix="/embed/"/>
+                <data android:pathPrefix="/watch"/>
+                <data android:pathPrefix="/attribution_link"/>
+                <!-- channel prefix -->
+                <data android:pathPrefix="/channel/"/>
+                <data android:pathPrefix="/user/"/>
+                <!-- playlist prefix -->
+                <data android:pathPrefix="/playlist"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.media.action.MEDIA_PLAY_FROM_SEARCH"/>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data android:scheme="http"/>
+                <data android:scheme="https"/>
+                <data android:host="youtu.be"/>
+                <data android:pathPrefix="/"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.media.action.MEDIA_PLAY_FROM_SEARCH"/>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data android:scheme="vnd.youtube"/>
+                <data android:scheme="vnd.youtube.launch"/>
+            </intent-filter>
+
+            <!-- Hooktube filter -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.media.action.MEDIA_PLAY_FROM_SEARCH"/>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data android:scheme="http"/>
+                <data android:scheme="https"/>
+                <data android:host="hooktube.com"/>
+                <data android:host="*.hooktube.com"/>
+                <!-- video prefix -->
+                <data android:pathPrefix="/v/"/>
+                <data android:pathPrefix="/embed/"/>
+                <data android:pathPrefix="/watch"/>
+                <!-- channel prefix -->
+                <data android:pathPrefix="/channel/"/>
+                <data android:pathPrefix="/user/"/>
+            </intent-filter>
+
+            <!-- Soundcloud filter -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.media.action.MEDIA_PLAY_FROM_SEARCH"/>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data android:scheme="http"/>
+                <data android:scheme="https"/>
+                <data android:host="soundcloud.com"/>
+                <data android:host="m.soundcloud.com"/>
+                <data android:host="www.soundcloud.com"/>
+                <data android:pathPrefix="/"/>
+            </intent-filter>
+
+            <!-- Share filter -->
+            <intent-filter>
+                <action android:name="android.intent.action.SEND"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:mimeType="text/plain"/>
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name=".RouterActivity$FetcherService"
+            android:exported="false"/>
+    </application>
+</manifest>
